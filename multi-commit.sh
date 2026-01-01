@@ -1,4 +1,12 @@
 #!/bin/bash
+#!/bin/bash
+
+# wait for internet
+until ping -c 1 github.com &>/dev/null
+do
+  sleep 10
+done
+
 
 FILE="activity.log"
 
