@@ -1,0 +1,31 @@
+name: Random Multi Commit
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # every hour
+  workflow_dispatch:
+
+jobs:
+  random-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Decide randomness
+        id: random
+        run: |
+          echo "chance=$((RANDOM % 100))" >> $GITHUB_OUTPUT
+          echo "sleep=$((RANDOM % 1800 + 60))" >> $GITHUB_OUTPUT
+
+      - name: Random wait
+        run: sleep ${{ steps.random.outputs.sleep }}
+
+      - name: Run multi-commit randomly
+        if: ${{ steps.random.outputs.chance < 40 }}
+        run: |
+          chmod +x multi-commit.sh
+          ./multi-commit.sh
